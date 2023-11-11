@@ -10,12 +10,23 @@ function elt (type, attrs, ...children) {
   return node
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  const board = document.querySelector(".board");
+function showBoard() {
+  const board = document.querySelector(".board")
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 7; j++) {
-      const field = elt("div", { class: "field" });
-      board.appendChild(field);
+      const field = elt("div", { class: "field" })
+      if(Math.round(Math.random()) === 1) {
+        if(Math.round(Math.random()) === 1) {
+          const piece = elt("div", {class: "blue piece"})
+          field.appendChild(piece)
+        }else {
+          const piece = elt("div", {class: "red piece"})
+          field.appendChild(piece)
+        }
+
+      }
+      board.appendChild(field)
     }
   }
-});
+}
+
