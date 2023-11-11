@@ -10,23 +10,43 @@ function elt (type, attrs, ...children) {
   return node
 }
 
+let boardState = Array(6).fill('').map(el => Array(7).fill(''))
+
 function showBoard() {
   const board = document.querySelector(".board")
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 7; j++) {
       const field = elt("div", { class: "field" })
-      if(Math.round(Math.random()) === 1) {
-        if(Math.round(Math.random()) === 1) {
-          const piece = elt("div", {class: "blue piece"})
-          field.appendChild(piece)
-        }else {
-          const piece = elt("div", {class: "red piece"})
-          field.appendChild(piece)
-        }
-
+      if(boardState[i][j] === 'r') {
+        field.appendChild(elt("div", { class: "red piece" }))
+      }
+      if(boardState[i][j] === 'b') {
+        field.appendChild(elt("div", { class: "blue piece" }))
       }
       board.appendChild(field)
     }
   }
 }
 
+var timer
+
+function setTimer(){
+  timer = setInterval(function(){randomSetter()}, 1000)
+}
+
+function randomSetter(){
+  column = Math.floor(Math.random() * (6 - 0 + 1) + 0)
+  row = Math.floor(Math.random() * (5 - 0 + 1) + 0)
+  state = Math.floor(Math.random() * (2 - 0 + 1) + 0)
+
+  if(state == 0){
+    boardState[row][column] = 'r'
+  }
+  else if(state == 1){
+    boardState[row][column] = 'b'
+  }
+  else if(state==2){
+    boardState[row][column] = ''
+  }
+  showBoard()
+}
