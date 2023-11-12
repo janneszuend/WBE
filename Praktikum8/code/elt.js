@@ -14,7 +14,6 @@ let boardState = Array(6).fill('').map(el => Array(7).fill(''))
 
 function showBoard() {
   const board = document.querySelector(".board")
-  // Clear the board before rendering new pieces
   board.innerHTML = '';
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 7; j++) {
