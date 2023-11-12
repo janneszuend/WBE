@@ -14,6 +14,8 @@ let boardState = Array(6).fill('').map(el => Array(7).fill(''))
 
 function showBoard() {
   const board = document.querySelector(".board")
+  // Clear the board before rendering new pieces
+  board.innerHTML = '';
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 7; j++) {
       const field = elt("div", { class: "field" })
@@ -39,13 +41,13 @@ function randomSetter(){
   row = Math.floor(Math.random() * (5 - 0 + 1) + 0)
   state = Math.floor(Math.random() * (2 - 0 + 1) + 0)
 
-  if(state == 0){
+  if(state === 0){
     boardState[row][column] = 'r'
   }
-  else if(state == 1){
+  else if(state === 1){
     boardState[row][column] = 'b'
   }
-  else if(state==2){
+  else if(state === 2){
     boardState[row][column] = ''
   }
   showBoard()
