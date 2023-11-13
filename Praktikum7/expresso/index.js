@@ -61,6 +61,19 @@ app.get('/api/data/:id', function(req, res, next){
   else next()
 })
 
+app.delete('/api/data/:id', function(req, res, next){
+  var id = req.params.id
+  var result = data[id]
+
+  if (result) {
+    delete data[id]
+    res.send({message: "deleted"})
+  }
+  else next()
+})
+
+app.put()
+
 //  POST-Request bearbeiten
 //
 app.post('/api/data', function (req, res, next) {
