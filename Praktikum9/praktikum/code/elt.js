@@ -12,6 +12,12 @@ function elt (type, attrs, ...children) {
 
 let boardState = Array(6).fill('').map(el => Array(7).fill(''))
 
+const Player = {
+  red: 'r',
+  blue: 'b'
+} 
+
+let currentPlayer = Player.red
 
 function showBoard() {
   const board = document.querySelector(".board")
@@ -19,7 +25,7 @@ function showBoard() {
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 7; j++) {
       const field = elt("div", { class: "field" })
-      field.addEventListener("click", event => setStone(j));
+      field.addEventListener("click", event => setStone(j))
       if(boardState[i][j] === 'r') {
         field.appendChild(elt("div", { class: "red piece" }))
       }
@@ -29,31 +35,44 @@ function showBoard() {
       board.appendChild(field)
     }
   }
+  document.getElementById('currentPlayer').textContent = getCurrentPlayer()
 }
 
 function setStone(column){
-
+  let rowElements = getRowElementsInArray(column)
+  for(let i = 5; i >= 0; i--){
+    if(rowElements[i] === ''){
+      boardState[i][column] = currentPlayer
+      break
+    }
+  }
+  if (currentPlayer === Player.red) {
+    currentPlayer = Player.blue
+  } else {
+    currentPlayer = Player.red
+  }
+  showBoard()
 }
 
-// var timer
+function getRowElementsInArray(column){
+  let rowElements = []
+  for(let i = 0; i < 6; i++){
+    rowElements.push(boardState[i][column])
+  }
+  return rowElements
+}
 
-// function setTimer(){
-//   timer = setInterval(function(){randomSetter()}, 1000)
-// }
+function getCurrentPlayer() {
+  if (currentPlayer === Player.red) {
+    return 'red'
+  } else {
+    return 'blue'
+  }
+}
 
-// function randomSetter(){
-//   column = Math.floor(Math.random() * (6 - 0 + 1) + 0)
-//   row = Math.floor(Math.random() * (5 - 0 + 1) + 0)
-//   state = Math.floor(Math.random() * (2 - 0 + 1) + 0)
+function reset() {
+  boardState = Array(6).fill('').map(el => Array(7).fill(''))
+  currentPlayer = Player.red
+  showBoard()
+}
 
-//   if(state === 0){
-//     boardState[row][column] = 'r'
-//   }
-//   else if(state === 1){
-//     boardState[row][column] = 'b'
-//   }
-//   else if(state === 2){
-//     boardState[row][column] = ''
-//   }
-//   showBoard()
-// }
