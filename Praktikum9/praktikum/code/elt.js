@@ -12,6 +12,7 @@ function elt (type, attrs, ...children) {
 
 let boardState = Array(6).fill('').map(el => Array(7).fill(''))
 
+
 function showBoard() {
   const board = document.querySelector(".board")
   board.innerHTML = '';
@@ -31,7 +32,7 @@ function showBoard() {
 }
 
 function setStone(column){
-  
+
 }
 
 // var timer
