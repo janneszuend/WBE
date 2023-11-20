@@ -18,6 +18,7 @@ function showBoard() {
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 7; j++) {
       const field = elt("div", { class: "field" })
+      field.addEventListener("click", event => setStone(j));
       if(boardState[i][j] === 'r') {
         field.appendChild(elt("div", { class: "red piece" }))
       }
@@ -29,11 +30,8 @@ function showBoard() {
   }
 }
 
-function setStone(){
-  document.body.addEventListener("click", event => {
-    const row = event.currentTarget
-    console.log(row)
-  })
+function setStone(column){
+  
 }
 
 // var timer
