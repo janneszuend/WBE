@@ -32,6 +32,7 @@
     let currentPlayer = Player.red
     let previousPlayer = Player.blue
 
+
     let boardState = Array(6).fill('').map(el => Array(7).fill(''))
 
     const SERVICE = "http://localhost:3000/api/data/c4state?api-key=c4game"
@@ -63,7 +64,7 @@
           board.appendChild(field)
         }
       }
-      // document.getElementById('currentPlayer').textContent = getCurrentPlayer()
+      document.getElementById('currentPlayer').textContent = getCurrentPlayer()
 
       return board
     }
@@ -151,26 +152,27 @@
     //   })
     // }
 
-
+    let url = "http://localhost:3000/"
+    let datakey = "c4state"
     //  Get current state from server and re-draw board
     //
     function loadState() {
-
-      // ...
-      // your implementation
-      // ...
-
+      fetch(url + "api/data/" + datakey + "?api-key=c4game")
+        .then(response => response.json())
+        .then(data => {
+          boardState = data
+          showBoard()
+        })
     }
 
     //  Put current state to server
     //
     function saveState() {
-
-      // ...
-      // your implementation
-      // ...
-
-
+      fetch(url + "api/data/" + datakey + "?api-key=c4game", {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(boardState)
+      })
     }
 
     function connect4Winner(colour, board) {

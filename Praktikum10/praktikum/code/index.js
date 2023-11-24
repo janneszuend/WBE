@@ -52,7 +52,8 @@ app.use(express.json())
 var apiKeys = ['wbeweb', 'c4game']
 
 //  unsere tolle in-memory Datenbank :)
-var data = {1234567890: {demodata: "wbe is an inspiring challenge"}}
+var standardBoard = Array(6).fill('').map(el => Array(7).fill(''))
+var data = {1234567890: JSON.stringify(standardBoard)}
 
 //  GET-Request bearbeiten
 //
