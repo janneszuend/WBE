@@ -3,8 +3,8 @@
  *  WBE-Praktikum
  */
 
-var express = require('express')
-var app = express()
+let express = require('express')
+let app = express()
 
 //  Fehlerobjekt anlegen
 //
@@ -30,7 +30,7 @@ app.use(express.static('public'))
 //  API-Key überprüfen
 // 
 app.use('/api', function(req, res, next){
-  var key = req.query['api-key']
+  let key = req.query['api-key']
   
   // Key fehlt
   if (!key) { 
@@ -49,20 +49,19 @@ app.use('/api', function(req, res, next){
 app.use(express.json())
 
 //  gültige API-Keys
-var apiKeys = ['wbeweb', 'c4game']
+let apiKeys = ['wbeweb', 'c4game']
 
 //  unsere tolle in-memory Datenbank :)
-var standardBoard = Array(6).fill('').map(el => Array(7).fill(''))
-var data = {1234567890: JSON.stringify(standardBoard)}
+let standardBoard = Array(6).fill('').map(el => Array(7).fill(''))
+var data = {12: JSON.stringify(standardBoard)}
 
 //  GET-Request bearbeiten
 //
-app.get('/api/data/:id', function(req, res, next){
-  var id = req.params.id
-  var result = data[id]
-
-  if (result) res.send(result)
-  else next()
+app.get('/api/data', function(req, res, next){
+  let id = 12
+  let board = data[id]
+  if (!board) return next(error(404, 'board not found'))
+  res.send(id)
 })
 
 //  POST-Request bearbeiten
@@ -76,20 +75,19 @@ app.post('/api/data', function (req, res, next) {
 //  DELETE-Request bearbeiten
 //
 app.delete('/api/data/:id', function(req, res, next){
-  var id = req.params.id
+  let id = req.params.id
   delete data[id]
   res.sendStatus(204)
 })
 
 //  PUT-Request bearbeiten
 //
-app.put('/api/data/:id', function(req, res, next){
-  var id = req.params.id
-  if (data[id]) {
-    data[id] = req.body
-    res.send(req.body)
-  }
-  else next()
+app.put('/api/data', function(req, res, next){
+  let id = 12
+  let board = req.body.board
+  if (!data[id]) return res.status(404).send('board not found');
+  data[id] = board
+  res.sendStatus(204)
 })
 
 //  Middleware mit vier Argumenten wird zur Fehlerbehandlung verwendet
