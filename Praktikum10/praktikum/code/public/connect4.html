@@ -33,7 +33,7 @@
     let previousPlayer = Player.blue
 
 
-    let boardState = Array(6).fill('').map(el => Array(7).fill(''))
+    let boardState = Array(6).fill('-').map(el => Array(7).fill('-'))
 
     const SERVICE = "http://localhost:3000/api/data?api-key=c4game"
 
@@ -55,10 +55,10 @@
         for (let j = 0; j < 7; j++) {
           const field = elt("div", { class: "field" })
           field.addEventListener("click", event => setStone(j))
-          if (boardState[i][j] === 'r') {
+          if (boardState[i][j] === "r") {
             field.appendChild(elt("div", { class: "red piece" }))
           }
-          if (boardState[i][j] === 'b') {
+          if (boardState[i][j] === "b") {
             field.appendChild(elt("div", { class: "blue piece" }))
           }
           board.appendChild(field)
@@ -87,7 +87,7 @@
     function setStone(column) {
       let rowElements = getRowElementsInArray(column)
       for (let i = 5; i >= 0; i--) {
-        if (rowElements[i] === '') {
+        if (rowElements[i] === '-') {
           boardState[i][column] = currentPlayer
           break
         }
@@ -157,10 +157,12 @@
     //  Get current state from server and re-draw board
     //
     function loadState() {
-      fetch(SERVICE)
+      fetch(SERVICE, {
+        method: 'GET'
+      })
         .then(response => response.json())
         .then(data => {
-          boardState = data
+          boardState = data.board
           showBoard()
         })
     }
@@ -175,22 +177,10 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          id: '12', // replace with the actual id
+           // replace with the actual id
           board: boardState
         })
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(response.status + ' ' + response.statusText + ' ' + response.url );
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('Success:', data);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
     }
 
 

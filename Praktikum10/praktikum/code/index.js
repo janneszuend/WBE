@@ -3,8 +3,8 @@
  *  WBE-Praktikum
  */
 
-let express = require('express')
-let app = express()
+const express = require('express')
+const app = express()
 
 //  Fehlerobjekt anlegen
 //
@@ -48,20 +48,22 @@ app.use('/api', function(req, res, next){
 //  JSON-Daten akzeptieren
 app.use(express.json())
 
+
 //  gültige API-Keys
-let apiKeys = ['wbeweb', 'c4game']
+var apiKeys = ['wbeweb', 'c4game']
 
 //  unsere tolle in-memory Datenbank :)
-let standardBoard = Array(6).fill('').map(el => Array(7).fill(''))
-var data = {12: JSON.stringify(standardBoard)}
+var standardBoard = Array(6).fill('-').map(el => Array(7).fill('-'))
+// var data = {12: JSON.stringify(standardBoard)}
+var data = {1234567890: {Board: standardBoard}}
 
 //  GET-Request bearbeiten
 //
 app.get('/api/data', function(req, res, next){
-  let id = 12
+  let id = 1234567890
+  if (!data[id]) return next(error(404, 'board not found'));
   let board = data[id]
-  if (!board) return next(error(404, 'board not found'))
-  res.send(id)
+  res.send({board})
 })
 
 //  POST-Request bearbeiten
@@ -83,11 +85,12 @@ app.delete('/api/data/:id', function(req, res, next){
 //  PUT-Request bearbeiten
 //
 app.put('/api/data', function(req, res, next){
-  let id = 12
+  let id = 1234567890
   let board = req.body.board
   if (!data[id]) return res.status(404).send('board not found');
   data[id] = board
   res.sendStatus(204)
+  res.send('put request')
 })
 
 //  Middleware mit vier Argumenten wird zur Fehlerbehandlung verwendet
