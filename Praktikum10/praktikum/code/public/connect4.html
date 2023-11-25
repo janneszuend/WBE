@@ -66,7 +66,6 @@
       }
       document.getElementById('currentPlayer').textContent = getCurrentPlayer()
 
-      return board
     }
 
 
@@ -102,11 +101,19 @@
 
       showBoard()
 
-      if (connect4Winner(previousPlayer, boardState)) {
-        showBoard()
-        alert(getPreviousPlayer() + ' wins!')
-        //reset()
+
+      //  Check for winner
+      if(connect4Winner(previousPlayer, boardState)){
+        document.getElementById('winner').textContent = getPreviousPlayer() + ' wins!'
+        
       }
+
+
+      // if (connect4Winner(previousPlayer, boardState)) {
+      //   showBoard()
+      //   alert(getPreviousPlayer() + ' wins!')
+      //   //reset()
+      // }
     }
 
     function getRowElementsInArray(column) {
@@ -134,9 +141,10 @@
     }
 
     function reset() {
-      boardState = Array(6).fill('').map(el => Array(7).fill(''))
+      boardState = Array(6).fill('-').map(el => Array(7).fill('-'))
       currentPlayer = Player.red
-      showBoard()
+      document.getElementById('winner').textContent = 'you both are loosers'
+      initGame()
     }
 
     // //  Attach event handler to board
@@ -152,10 +160,6 @@
     //   })
     // }
 
-    // let url = "http://localhost:3000/connect4.html/"
-    // let datakey = "c4state"
-    //  Get current state from server and re-draw board
-    //
     function loadState() {
       fetch(SERVICE, {
         method: 'GET'
@@ -229,6 +233,7 @@
   <div class="controls">
     <button onclick="loadState()">Load</button>
     <button onclick="saveState()">Save</button>
+    <button onclick="reset()">Reset</button>
   </div>
 
   <div>
@@ -239,9 +244,6 @@
   <div>
     <label>current Player:</label>
     <span id="currentPlayer">red</span>
-  </div>
-  <div>
-    <button onclick="reset()">reset</button>
   </div>
 
   <script>
