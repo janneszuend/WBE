@@ -2,18 +2,13 @@
 <html lang="en">
 
 <head>
-  <script>
-    import { renderSJDON } from './render-sjdon.js';
-  </script>
 </head>
-
 <body>
-
-
   <div id="app">
   </div>
+  <script type="module">
+    import { renderSJDON } from './render-sjdon.js'
 
-  <script>
     const element =
       [
         "div", { style: "background: salmon" },
@@ -26,5 +21,4 @@
     renderSJDON(element, appRoot)
   </script>
 </body>
-
 </html>
