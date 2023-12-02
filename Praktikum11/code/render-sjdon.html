@@ -3,47 +3,28 @@
 
 <head>
   <script>
-  const element = 
-  ["div", {style: "background: salmon"}, 
-    ["h1", "Hello World"], 
-    ["h2", {style: "text-align:right"}, "from our library"] ] 
- 
-  let appRoot = document.getElementById("app") 
-
-  renderSJDON(element, appRoot)
-
-  function renderSJDON(element, parent) {
-    if (typeof element === "string") {
-      parent.appendChild(document.createTextNode(element))
-    } else {
-      const domElement = document.createElement(element[0])
-      const props = element[1]
-      const children = element[2]
-
-      Object.keys(props).forEach(key => {
-        domElement[key] = props[key]
-      })
-
-      if (children) {
-        children.forEach(child => {
-          renderSJDON(child, domElement)
-        })
-      }
-
-      parent.appendChild(domElement)
-    }
-  }
+    import { renderSJDON } from './render-sjdon.js';
   </script>
 </head>
 
 <body>
 
 
+  <div id="app">
+  </div>
 
   <script>
-    renderSJDON()
-  </script>
+    const element =
+      [
+        "div", { style: "background: salmon" },
+        ["h1", "Hello World"],
+        ["h2", { style: "text-align:right" }, "from our library"]
+      ]
 
+    let appRoot = document.getElementById("app")
+
+    renderSJDON(element, appRoot)
+  </script>
 </body>
 
 </html>
