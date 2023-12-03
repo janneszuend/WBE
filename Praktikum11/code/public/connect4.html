@@ -5,24 +5,9 @@
   <meta charset="UTF-8">
   <title>Vier gewinnt</title>
   <link rel="stylesheet" href="styles.css">
-  <script>
+  <script type="module">
 
-    /*
-     *  This solution sould be considered as a proof of concept – the code 
-     *  definitely needs some cleanup and documentation
-     */
-
-    // let state = {
-    //   board: [
-    //     [ '', '', '', '', '', '', '' ],
-    //     [ '', '', '', '', '', '', '' ],
-    //     [ '', '', '', '', '', '', '' ],
-    //     [ '', '', '', '', '', '', '' ],
-    //     [ '', '', '', '', '', '', '' ],
-    //     [ '', '', '', '', '', '', '' ]
-    //   ],
-    //   next: 'b'
-    // }
+    import { renderSJDON } from '../render-sjdon.js'
 
     const Player = {
       red: 'r',
@@ -51,22 +36,32 @@
       const board = document.querySelector(".board")
       board.innerHTML = '';
 
-      for (let i = 0; i < 6; i++) {
-        for (let j = 0; j < 7; j++) {
-          const field = elt("div", { class: "field" })
-          field.addEventListener("click", event => setStone(j))
-          if (boardState[i][j] === "r") {
-            field.appendChild(elt("div", { class: "red piece" }))
-          }
-          if (boardState[i][j] === "b") {
-            field.appendChild(elt("div", { class: "blue piece" }))
-          }
-          board.appendChild(field)
-        }
-      }
-      document.getElementById('currentPlayer').textContent = getCurrentPlayer()
+      // for (let i = 0; i < 6; i++) {
+      //   for (let j = 0; j < 7; j++) {
+      //     const field = elt("div", { class: "field" })
+      //     field.addEventListener("click", event => setStone(j))
+      //     if (boardState[i][j] === "r") {
+      //       field.appendChild(elt("div", { class: "red piece" }))
+      //     }
+      //     if (boardState[i][j] === "b") {
+      //       field.appendChild(elt("div", { class: "blue piece" }))
+      //     }
+      //     board.appendChild(field)
+      //   }
+      // }
 
+      for (let i = 0; i < 6; i++) {
+        let row = ["div", { style: "background: white" }];
+        for (let j = 0; j < 7; j++) {
+          let cell = ["div", { class: "field" }, "-"];
+          row.push(cell);
+        }
+        renderSJDON(row, board);
+      }
+
+      document.getElementById('currentPlayer').textContent = getCurrentPlayer()
     }
+
 
 
     //  Helper function for DOM manipulation
@@ -103,9 +98,9 @@
 
 
       //  Check for winner
-      if(connect4Winner(previousPlayer, boardState)){
+      if (connect4Winner(previousPlayer, boardState)) {
         document.getElementById('winner').textContent = getPreviousPlayer() + ' wins!'
-        
+
       }
 
 
@@ -181,7 +176,7 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-           // replace with the actual id
+          // replace with the actual id
           board: boardState
         })
       })
@@ -246,9 +241,10 @@
     <span id="currentPlayer">red</span>
   </div>
 
+<!-- 
   <script>
     initGame()
-  </script>
+  </script> -->
 
 </body>
 
