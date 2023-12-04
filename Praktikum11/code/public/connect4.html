@@ -5,9 +5,9 @@
   <meta charset="UTF-8">
   <title>Vier gewinnt</title>
   <link rel="stylesheet" href="styles.css">
-  <script type="module">
+  <script>
 
-    import { renderSJDON } from '../render-sjdon.js'
+    // import { renderSJDON } from '../render-sjdon.js'
 
     const Player = {
       red: 'r',
@@ -16,6 +16,12 @@
 
     let currentPlayer = Player.red
     let previousPlayer = Player.blue
+    let isServerConnected = false
+
+    let loadFromServerButton = document.querySelector('button[id="loadFromServerButton"]')
+    loadFromServerButton.style.visibility = isServerConnected ? 'visible' : 'hidden'
+    let saveToServerButton = document.querySelector('button[id="saveToServerButton"]')
+    saveToServerButton.style.visibility = isServerConnected ? 'visible' : 'hidden'
 
 
     let boardState = Array(6).fill('-').map(el => Array(7).fill('-'))
@@ -29,6 +35,26 @@
       let board = showBoard()
     }
 
+    function checkServerAvailability() {
+      fetch(SERVICE)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Server is not available');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Server is available');
+          isServerConnected = true;
+          // Server is available, you can enable the buttons here
+        })
+        .catch(error => {
+          console.log('Server is not available');
+          isServerConnected = false;
+          // Server is not available, you can disable the buttons here
+        });
+    }
+
 
     //  Show board
     // 
@@ -36,29 +62,29 @@
       const board = document.querySelector(".board")
       board.innerHTML = '';
 
-      // for (let i = 0; i < 6; i++) {
-      //   for (let j = 0; j < 7; j++) {
-      //     const field = elt("div", { class: "field" })
-      //     field.addEventListener("click", event => setStone(j))
-      //     if (boardState[i][j] === "r") {
-      //       field.appendChild(elt("div", { class: "red piece" }))
-      //     }
-      //     if (boardState[i][j] === "b") {
-      //       field.appendChild(elt("div", { class: "blue piece" }))
-      //     }
-      //     board.appendChild(field)
-      //   }
-      // }
-
       for (let i = 0; i < 6; i++) {
-        let row = ["div", { style: "background: white" }];
         for (let j = 0; j < 7; j++) {
-          let cell = ["div", { class: "field" }, "-"];
-          row.push(cell);
+          const field = elt("div", { class: "field" })
+          field.addEventListener("click", event => setStone(j))
+          if (boardState[i][j] === "r") {
+            field.appendChild(elt("div", { class: "red piece" }))
+          }
+          if (boardState[i][j] === "b") {
+            field.appendChild(elt("div", { class: "blue piece" }))
+          }
+          board.appendChild(field)
         }
-        renderSJDON(row, board);
       }
 
+      // for (let i = 0; i < 6; i++) {
+      //   let row = ["div", { style: "background: white" }];
+      //   for (let j = 0; j < 7; j++) {
+      //     let cell = ["div", { class: "field" }, "-"];
+      //     row.push(cell);
+      //   }
+      //   renderSJDON(row, board);
+      // }
+      checkServerAvailability()
       document.getElementById('currentPlayer').textContent = getCurrentPlayer()
     }
 
@@ -155,6 +181,7 @@
     //   })
     // }
 
+
     function loadState() {
       fetch(SERVICE, {
         method: 'GET'
@@ -166,10 +193,34 @@
         })
     }
 
+    function loadStateFromServer() {
+      fetch(SERVICE, {
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(data => {
+          boardState = data.board
+          showBoard()
+        })
+    }
 
     //  Put current state to server
     //
     function saveState() {
+      fetch(SERVICE, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          // replace with the actual id
+          board: boardState
+        })
+      })
+    }
+    //  Put current state to server
+    //
+    function saveStateToServer() {
       fetch(SERVICE, {
         method: 'PUT',
         headers: {
@@ -226,6 +277,8 @@
   <div class="board"></div>
 
   <div class="controls">
+    <button id="loadFromServerButton" onclick="loadStateFromServer()">Load from Server</button>
+    <button id="saveToServerButton" onclick="saveStateToServer()">Save to Server</button>
     <button onclick="loadState()">Load</button>
     <button onclick="saveState()">Save</button>
     <button onclick="reset()">Reset</button>
@@ -241,10 +294,10 @@
     <span id="currentPlayer">red</span>
   </div>
 
-<!-- 
+  
   <script>
     initGame()
-  </script> -->
+  </script>
 
 </body>
 
