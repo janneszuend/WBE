@@ -1,5 +1,3 @@
-// import { renderSJDON } from '../render-sjdon.js'
-
 const Player = {
   red: "r",
   blue: "b",
@@ -21,35 +19,16 @@ function initGame() {
   let board = showBoard();
 }
 
-function checkServerAvailability() {
-  fetch(SERVICE)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Server is not available");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Server is available");
-      isServerConnected = true;
-      // Server is available, you can enable the buttons here
-    })
-    .catch((error) => {
-      console.log("Server is not available");
-      isServerConnected = false;
-      // Server is not available, you can disable the buttons here
-    });
-}
-
 function shouldButtonBeVisible() {
+  checkServerAvailability();
   let loadFromServerButton = document.querySelector(".loadFromServerButton");
-  loadFromServerButton.style.visibility = (isServerConnected
+  loadFromServerButton.style.visibility = isServerConnected
     ? "visible"
-    : "hidden");
+    : "hidden";
   let saveToServerButton = document.querySelector(".saveToServerButton");
-  saveToServerButton.style.visibility = (isServerConnected
+  saveToServerButton.style.visibility = isServerConnected
     ? "visible"
-    : "hidden");
+    : "hidden";
 }
 
 //  Show board
@@ -80,7 +59,7 @@ function showBoard() {
   //   }
   //   renderSJDON(row, board);
   // }
-  checkServerAvailability();
+
   document.getElementById("currentPlayer").textContent = getCurrentPlayer();
   shouldButtonBeVisible();
 }
@@ -175,6 +154,22 @@ function reset() {
 //     showBoard()
 //   })
 // }
+
+function checkServerAvailability() {
+  fetch(SERVICE, {
+    method: "GET",
+  })
+    .then((response) => {
+      console.log("Server is available");
+      isServerConnected = true;
+      // Server is available, you can enable the buttons here
+    })
+    .catch((error) => {
+      console.log("Server is not available");
+      isServerConnected = false;
+      // Server is not available, you can disable the buttons here
+    });
+}
 
 function loadState() {
   fetch(SERVICE, {
