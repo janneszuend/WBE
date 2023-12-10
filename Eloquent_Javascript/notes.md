@@ -149,3 +149,76 @@ If you write an = operator after a parameter, followed by an expression, the val
 
 ### Closure
 
+What happens to local bindings when the funcion call that created them is no longer active? It defines a funciton, wrapValue, that creates a local binding. It then returns a funciton that accesses and returns this local binding. 
+
+    function wrapValue(n) {
+      let local = n;
+      return () => local;
+    }
+
+    let wrap1 = wrapValue(1);
+    let wrap2 = wrapValue(2);
+    console.log(wrap1());
+    // → 1
+    console.log(wrap2());
+    // → 2
+
+This is allowed and works. Both instances of the binding can still be accessed. This feature - being able to reference a specific instance of a local binidng in an enclosing scope - is called *closure*.
+
+With a slight change, we can turn the previous example into a way to create functions that multiply by an arbitrary amount.
+
+    function multiplier(factor) {
+      return number => number * factor;
+    }
+    let twice = multiplier(2);
+    console.log(twice(5));
+    // → 10
+
+In the example, multiplier is called and creates an environment in which its factor parameter is bound to 2. The funciton value it returns, which is stored in twice, remembers this environment. So when that is called, it multiplies its argument by 2.
+
+### Recursion
+
+It is perfectly okay for a function to call itself, as long as it doesn't do it so often that it overflows the stack. A function that calls itself is called recursive. 
+
+    function power(base, exponent) {
+      if (exponent == 0) {
+        return 1;
+      } else {
+        return base * power(base, exponent - 1);
+      }
+    }
+    console.log(power(2, 3));
+    // → 8
+
+Recursion is not always just an inefficient alternative to looping. Some problems really are easier to solve with recursion than with loops. Most often these are problems that require exploring or processing several "brancehs", each of which might branch out again into even more branches.
+
+    function findSolution(target) {
+      function find(current, history) {
+        if (current == target) {
+          return history;
+        } else if (current > target) {
+          return null;
+    } else {
+    return find(current + 5, `(${history} + 5)`) ||
+    find(current * 3, `(${history} * 3)`);
+    } }
+    return find(1, "1"); }
+    console.log(findSolution(24)); // → (((1 * 3) + 5) * 3)
+
+The program runs like this to find the solution for number 13.
+
+    find(1, "1")
+      find(6, "(1 + 5)")
+        ff3ind(11, "((1 + 5) + 5)") find(16, "(((1 + 5) + 5) + 5)")
+          too big
+        find(33, "(((1 + 5) + 5) * 3)")
+          too big
+      find(18, "((1 + 5) * 3)")
+        too big 
+    find(3, "(1 * 3)")
+      find(8, "((1 * 3) + 5)")
+        find(13, "(((1 * 3) + 5) + 5)")
+          found!
+
+## Data structures: Objects and Array
+
