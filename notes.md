@@ -58,5 +58,94 @@ Example:
     console.log(square(12))
     // --> 144
 
+### Bindings and scopes
 
+Each binding has a scope, which is the part of the program in which the binding is visible. Bindings declared with let and const are in fact local to the block that they are declared in. Old-style bindings, created with the var keyword, are visible throughout the whole function that they appear in -- or throughout the global scope, if they are not in a function.
+
+### Functions as values
+
+A binding that holds a function is still just a regular binding and can, if not constant, be assigned a new value, like so:
+
+    let launchMissiles = function() { missileSystem.launch("now")
+    }
+    if (safeMode) {
+      launchMissiles = function() {/* do nothing */}
+    }
+
+### Declaration Notation
+
+There is a shorter way to create a function binding. When the function keyword is used at the start of a statement, it works differently.
+
+    function square(x) {
+      return x * x;
+    }
+
+This is a funciton declaration.
+
+    console.log("The future says:", future());
+    function future() {
+    return "You'll never have flying cars";
+    }
+
+The preceding code works, even though the function is defined *below* the code that uses it. Functions declarations are not part of the regular top-to-bottom flow of control. This is sometimes useful because it offers the freedom to order code in a way that seems meaningful, without worrying about haveing to define all functions before they are used.
+
+### Arrow Functions
+
+  Instead of the function keyword, it uses an arrow (=>).
+
+      const power = (base, exponent) => {
+        let result = 1;
+        for (let count = 0; count < exponent; count++) {
+          result *= base;
+        }
+        return result;
+      }
+
+The arrow comes after the list of parameters and is followed by the functions body. Both is possible:
+
+    const square1 = (x) => { return x * x; };
+    const square2 = x => x * x;
+
+When an arrow function has no parameters at all, ts parameter list is just an empty set of parantheses:
+
+    const horn = () => { 
+      console.log("Toot");
+    };
+
+### Optional Arguments
+
+The following code is allowed and executes without any problem:
+
+    function square(x) { return x * x; } 
+    console.log(square(4, true, "hedgehog")); 
+    // → 16
+
+JavaScript is extremely broad-minded about the number of arguments you pass to a function. If you pass too many, the extra ones are ignored. If you pass to few, the missing parameters get assigned the value **undefined**.
+
+This works for example like this:
+
+    function minus(a, b) {
+      if (b === undefined) return -a;
+      else return a - b;
+    }
+    console.log(minus(10));
+    // → -10
+    console.log(minus(10, 5));
+    // → 5
+
+If you write an = operator after a parameter, followed by an expression, the value of that expression will replace the argument when it is not given. It acts as a default value.
+
+    function power(base, exponent = 2) {
+      let result = 1;
+      for (let count = 0; count < exponent; count++) {
+        result *= base;
+      }
+      return result;
+    }
+    console.log(power(4));
+    // → 16
+    console.log(power(2, 6));
+    // → 64
+
+### Closure
 
