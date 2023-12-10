@@ -222,3 +222,38 @@ The program runs like this to find the solution for number 13.
 
 ## Data structures: Objects and Array
 
+### Data sets
+
+Datatype for storing sequences of values:
+
+    let listOfNumbers = [2, 3, 5, 7, 11];
+    console.log(listOfNumbers[2]);
+    // → 5
+    console.log(listOfNumbers[0]);
+    // → 2
+    console.log(listOfNumbers[2 - 1]);
+    // → 3
+
+### Objects
+
+Values of the type object are arbitrary collections of properties. One way to create an object is by using braces as an expression.
+
+    let day1 = {
+    squirrel: false,
+    events: ["work", "touched tree", "pizza", "running"]
+    }; 
+    console.log(day1.squirrel); 
+    // → false 
+    console.log(day1.wolf);
+    // → undefined
+    day1.wolf = false; 
+    console.log(day1.wolf);
+    // → false
+
+Inside the braces, there is a list of properties separated by commas. Each property has a name followed ba a colon and a value. Properties whose names aren't valid bining names or valid numbers have to be quoted. 
+
+    let descriptions = {
+    work: "Went to work",
+    "touched tree": "Touched a tree"
+    };
+
