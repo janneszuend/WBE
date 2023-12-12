@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+  <title>Demo App</title>
+</head>
+
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id="root"></div>
+  
+  <script type="module">
+
+//
+//  Liste aufbauen
+//
+//  Aufgrund eines Bugs in SuiWeb 1.0 beim Rendern von input-Elementen
+//  ist es von Vorteil, für dieses Beispiel die frühere Version 0.3.4
+//  von SuiWeb zu verwenden.
+//
+//  Beachten Sie die etwas abweichende Verwendung von State Hooks:
+//  - useState hat 3 Parameter: die ersten beiden dienen zur Identifikation
+//    des Zustands, der dritte ist der Initialwert
+//  - die setState-Funktionen erhalten eine Update-Funktion statt des neuen
+//    Werts, z.B. setText(() => e.target.value) statt setText(e.target.value)
+//
+
+import { render, useState } from "./lib/suiweb-0.3.4.js"
+
+const App = () => {
+  
+  let [text, setText] = useState("myTextInput", 1, "")
+  let [items, setItems] = useState("items", 1, [])
+
+  return (
+    ["div",
+      ["p", "Da fehlt noch einiges"],
+    ] )
+}
+
+const element = [App]
+
+const container = document.getElementById("root")
+render(element, container)
+
+    
+  </script>
+</body>
+</html>

@@ -250,10 +250,37 @@ Values of the type object are arbitrary collections of properties. One way to cr
     console.log(day1.wolf);
     // → false
 
-Inside the braces, there is a list of properties separated by commas. Each property has a name followed ba a colon and a value. Properties whose names aren't valid bining names or valid numbers have to be quoted. 
+Inside the braces, there is a list of properties separated by commas. Each property has a name followed ba a colon and a value. Properties whose names aren't valid bining names or valid numbers have to be quoted.
 
     let descriptions = {
     work: "Went to work",
     "touched tree": "Touched a tree"
     };
+
+This means that braces have *two* meanings in JavaScript. At the start of a statement, they start a block of statements. In any other position, they describe an object. With the delete operator you can remove the named property from the object.
+
+    let anObject = {left: 1, right: 2};
+    console.log(anObject.left);
+    // → 1
+    delete anObject.left;
+    console.log(anObject.left);
+    // → undefined
+    console.log("left" in anObject); 
+    // → false
+    console.log("right" in anObject); 
+    // → true
+
+If you want to find out what properties an object has, you can use the Object.keys function. You give it an object, and it returns an array of strings - the object's property names.
+
+    console.log(Object.keys({x: 0, y: 0, z: 2})); 
+    // → ["x", "y", "z"]
+
+There is an Object.assign funciton that copies all properties from one object into another.
+
+    let objectA = {a: 1, b: 2}; 
+    Object.assign(objectA, {b: 3, c: 4}); 
+    console.log(objectA);
+    // → {a: 1, b: 3, c: 4}
+
+### Mutability
 
