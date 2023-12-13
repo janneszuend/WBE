@@ -12,6 +12,8 @@ div {
   flex-wrap: wrap;
 }
 
+
+
 .inactive {
   background-color: #eee;
 }
@@ -35,15 +37,48 @@ div {
   background-color: red;
 }
 
-.controls {
-  text-align: center;
+.sidenav {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 250px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: gray; /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px;
 }
-.controls button {
+
+
+.sidenav button {
   font-size: 1.5rem;
   margin-top: 1rem;
+  margin-left: 1rem;
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
 }
+
+.sidenav button:hover {
+  color: red;
+}
+
+.sidenav .text {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block;
+}
+
 
 .message {
   text-align: center;
   margin-top: 2em;
 }
+
+

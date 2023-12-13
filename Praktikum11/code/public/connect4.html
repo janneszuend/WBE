@@ -10,25 +10,45 @@
 
 <body>
 
-  <div class="board"></div>
 
-  <div class="controls">
+
+
+
+  <nav class="sidenav">
     <button class="loadFromServerButton" onclick="loadStateFromServer()">Load from Server</button>
+
+
     <button class="saveToServerButton" onclick="saveStateToServer()">Save to Server</button>
+
+
     <button onclick="loadState()">Load</button>
+
     <button onclick="saveState()">Save</button>
+
     <button onclick="reset()">Reset</button>
+
+    <div class="text">
+      <label>Winner:</label>
+      <span id="winner">you both are loosers</span>
+
+    </div>
+
+    <div class="text">
+      <label>current Player:</label>
+      <span id="currentPlayer">red</span>
+    </div>
+
+
+  </nav>
+
+
+
+  <div class="centered">
+    <div class="board"></div>
+
   </div>
 
-  <div>
-    <label>Winner:</label>
-    <span id="winner">you both are loosers</span>
-  </div>
 
-  <div>
-    <label>current Player:</label>
-    <span id="currentPlayer">red</span>
-  </div>
 
   <script>
     initGame()

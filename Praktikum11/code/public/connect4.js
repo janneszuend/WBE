@@ -50,18 +50,26 @@ function showBoard() {
       board.appendChild(field);
     }
   }
-
-  // for (let i = 0; i < 6; i++) {
-  //   let row = ["div", { style: "background: white" }];
-  //   for (let j = 0; j < 7; j++) {
-  //     let cell = ["div", { class: "field" }, "-"];
-  //     row.push(cell);
-  //   }
-  //   renderSJDON(row, board);
-  // }
+  if(countStones("r") > countStones("b")){
+    currentPlayer = Player.blue
+  }else{
+    currentPlayer = Player.red
+  }
 
   document.getElementById("currentPlayer").textContent = getCurrentPlayer();
   shouldButtonBeVisible();
+}
+
+function countStones(colour){
+  let count = 0;
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 7; j++){
+      if (boardState[i][j] === colour){
+        count++;
+      }
+    }
+  }
+  return count;
 }
 
 //  Helper function for DOM manipulation
@@ -101,12 +109,6 @@ function setStone(column) {
     document.getElementById("winner").textContent =
       getPreviousPlayer() + " wins!";
   }
-
-  // if (connect4Winner(previousPlayer, boardState)) {
-  //   showBoard()
-  //   alert(getPreviousPlayer() + ' wins!')
-  //   //reset()
-  // }
 }
 
 function getRowElementsInArray(column) {
@@ -142,19 +144,6 @@ function reset() {
   initGame();
 }
 
-// //  Attach event handler to board
-// //
-// function attachEventHandler (board) {
-//   board.addEventListener("click", (e) => {
-
-//     // ...
-//     // your implementation
-//     // ...
-
-//     showBoard()
-//   })
-// }
-
 function checkServerAvailability() {
   fetch(SERVICE, {
     method: "GET",
@@ -171,15 +160,18 @@ function checkServerAvailability() {
     });
 }
 
+// Save current state to LocalStorage
+function saveState() {
+  localStorage.setItem("boardState", JSON.stringify(boardState));
+}
+
+// Load state from LocalStorage
 function loadState() {
-  fetch(SERVICE, {
-    method: "GET",
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      boardState = data.board;
-      showBoard();
-    });
+  const savedState = localStorage.getItem("boardState");
+  if (savedState) {
+    boardState = JSON.parse(savedState);
+    showBoard();
+  }
 }
 
 function loadStateFromServer() {
@@ -193,20 +185,6 @@ function loadStateFromServer() {
     });
 }
 
-//  Put current state to server
-//
-function saveState() {
-  fetch(SERVICE, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      // replace with the actual id
-      board: boardState,
-    }),
-  });
-}
 //  Put current state to server
 //
 function saveStateToServer() {
