@@ -13,6 +13,8 @@ let boardState = Array(6)
 
 let stateSeq = [];
 
+let winner = false
+
 const SERVICE = "http://localhost:3000/api/data?api-key=c4game";
 
 //  Initialize game
@@ -20,6 +22,7 @@ const SERVICE = "http://localhost:3000/api/data?api-key=c4game";
 function initGame() {
   stateSeq.push(boardState.map((arr) => arr.slice()));
   let board = showBoard();
+  winner = false
 }
 
 function shouldButtonBeVisible() {
@@ -102,7 +105,14 @@ function setStone(column) {
   if (connect4Winner(previousPlayer, boardState)) {
     document.getElementById("winner").textContent =
       getPreviousPlayer() + " wins!";
+      winner = true
   }
+  if(winner){
+    setTimeout(() => {
+      alert('Player ' + getPreviousPlayer() + ' has won the game!');
+    }, 10);
+  }
+
 }
 
 function getRowElementsInArray(column) {
