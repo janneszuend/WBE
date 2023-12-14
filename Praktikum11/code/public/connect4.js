@@ -11,11 +11,14 @@ let boardState = Array(6)
   .fill("-")
   .map((el) => Array(7).fill("-"));
 
+let stateSeq = [];
+
 const SERVICE = "http://localhost:3000/api/data?api-key=c4game";
 
 //  Initialize game
 //
 function initGame() {
+  stateSeq.push(boardState.map((arr) => arr.slice()));
   let board = showBoard();
 }
 
@@ -50,26 +53,14 @@ function showBoard() {
       board.appendChild(field);
     }
   }
-  if(countStones("r") > countStones("b")){
-    currentPlayer = Player.blue
-  }else{
-    currentPlayer = Player.red
+  if (countStones("r") > countStones("b")) {
+    currentPlayer = Player.blue;
+  } else {
+    currentPlayer = Player.red;
   }
 
   document.getElementById("currentPlayer").textContent = getCurrentPlayer();
   shouldButtonBeVisible();
-}
-
-function countStones(colour){
-  let count = 0;
-  for (let i = 0; i < 6; i++) {
-    for (let j = 0; j < 7; j++){
-      if (boardState[i][j] === colour){
-        count++;
-      }
-    }
-  }
-  return count;
 }
 
 //  Helper function for DOM manipulation
@@ -101,6 +92,9 @@ function setStone(column) {
   } else {
     currentPlayer = Player.red;
   }
+
+  // how to push a copy of the array to a array
+  stateSeq.push(boardState.map((arr) => arr.slice()));
 
   showBoard();
 
@@ -141,7 +135,17 @@ function reset() {
     .map((el) => Array(7).fill("-"));
   currentPlayer = Player.red;
   document.getElementById("winner").textContent = "you both are loosers";
+  stateSeq = [];
   initGame();
+}
+
+function undo() {
+  if (stateSeq.length > 1) {
+    currentPlayer = previousPlayer;
+    stateSeq.pop();
+    boardState = stateSeq[stateSeq.length - 1];
+  }
+  showBoard();
 }
 
 function checkServerAvailability() {
@@ -200,6 +204,18 @@ function saveStateToServer() {
   });
 }
 
+function countStones(colour) {
+  let count = 0;
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 7; j++) {
+      if (boardState[i][j] === colour) {
+        count++;
+      }
+    }
+  }
+  return count;
+}
+
 function connect4Winner(colour, board) {
   let winner = false;
   for (let i = 0; i < 6; i++) {
@@ -254,27 +270,27 @@ function connect4Winner(colour, board) {
 }
 
 function renderSJDON(element, appRoot) {
-  let [tag, props, ...children] = element
+  let [tag, props, ...children] = element;
 
-  let el = document.createElement(tag)
+  let el = document.createElement(tag);
   for (let p in props) {
-    el.setAttribute(p, props[p])
+    el.setAttribute(p, props[p]);
   }
 
   for (let child of children) {
-    let node = document.createElement(child[0])
-    let num = child.length
+    let node = document.createElement(child[0]);
+    let num = child.length;
     for (let i = 1; i < num; i++) {
       if (typeof child[i] === "string") {
-        node.textContent = child[i]
+        node.textContent = child[i];
       } else {
         let attrs = child[i];
         for (let a in attrs) {
-          node.setAttribute(a, attrs[a])
+          node.setAttribute(a, attrs[a]);
         }
       }
     }
-    el.appendChild(node)
+    el.appendChild(node);
   }
-  appRoot.appendChild(el)
+  appRoot.appendChild(el);
 }
