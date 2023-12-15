@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Vier gewinnt</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="./connect4.js"></script>
+</head>
+
+<body>
+
+
+
+
+
+  <nav class="sidenav">
+    <button class="loadFromServerButton" onclick="loadStateFromServer()">Load from Server</button>
+    <button class="saveToServerButton" onclick="saveStateToServer()">Save to Server</button>
+    <button onclick="loadState()">Load</button>
+    <button onclick="saveState()">Save</button>
+    <button onclick="reset()">Reset</button>
+    <button class="undo" onclick="undo()">Undo</button>
+
+
+    <div class="text">
+      <label>Winner:</label>
+      <span id="winner">you both are loosers</span>
+
+    </div>
+
+    <div class="text">
+      <label>current Player:</label>
+      <span id="currentPlayer">red</span>
+    </div>
+
+
+  </nav>
+
+
+
+  <div class="centered">
+    <div class="board"></div>
+
+  </div>
+
+
+
+  <script>
+    initGame()
+  </script>
+</body>
+
+
+</html>
