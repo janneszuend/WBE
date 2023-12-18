@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+</head>
+<body>
+  <div id="app">
+  </div>
+  <script type="module">
+    import { renderSJDON } from './render-sjdon.js'
+
+    const element =
+      [
+        "div", { style: "background: salmon" },
+        ["h1", "Gameboard"],
+        
+        ["div", { class:  }, "from our library"]
+
+        
+
+       
+        
+      ]
+
+    let appRoot = document.getElementById("app")
+
+    renderSJDON(element, appRoot)
+  </script>
+</body>
+</html>
