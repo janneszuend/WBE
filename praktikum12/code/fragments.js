@@ -1,5 +1,4 @@
-
-import { render, parseSjdon, createElement } from "./lib/suiweb.min.js"
+import { render, parseSjdon, createElement } from "./lib/suiweb.min.js";
 
 const SERVICE = "http://localhost:3000/api/data?api-key=c4game";
 
@@ -10,20 +9,20 @@ const Player = {
 
 let state = {
   board: [
-    [ '', '', '', '', '', '', '' ],
-    [ '', '', '', '', '', '', '' ],
-    [ '', '', '', '', '', '', '' ],
-    [ '', '', '', '', '', '', '' ],
-    [ '', '', '', '', '', '', '' ],
-    [ '', '', '', '', '', '', '' ]
+    ["", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", ""],
   ],
-  current: Player.red, 
+  current: Player.red,
   previous: Player.blue,
   winner: false,
   isServerConnected: false,
-}
+};
 
-let stateSeq = []
+let stateSeq = [];
 
 function initGame() {
   stateSeq.push(state.board.map((arr) => arr.slice()));
@@ -76,7 +75,6 @@ function setStone(column) {
     }, 10);
   }
 }
-
 
 function getRowElementsInArray(column) {
   let rowElements = [];
@@ -244,36 +242,45 @@ function connect4Winner(colour, board) {
 
 //  Components
 //
-const App = () => [Board, {board: state.board}] 
+const App = () => [Board, { board: state.board }];
 
-const Board = ({board}) => {
-  let flatBoard = [].concat(...board)
-  let fields = flatBoard.map((type) => [Field, {type}])
-  return (
-    ["div", {"class": "board"}, ...fields]
-  )
-}
+const Board = ({ board }) => {
+  let rows = [];
+  for (const col in board) {
+    rows.push([Row, { coll: board[col] }]);
+  }
+  return ["div", { class: "board" }, ...rows];
+};
+
+const Row = ({ row }) => {
+  let fields = row.map((type) => [Field, { type }]);
+  return ["div", { class: "row" }, ...fields];
+};
 
 const Field = ({type}) => {
+  if(type == 'r'){
+      return (["div", {"class": "field"}, ["div", {"class" : "red piece"}]])
 
+  }else if (type == 'b'){
+      return (["div", {"class": "field"}, ["div", {"class" : "blue piece"}]])
+  }
+  else{
+      return (["div", {"class": "field"}])
+
+  }
 }
-
-
 //  Show board:
 //  render [App]
 //
-function showBoard () {
-  const app = document.querySelector(".app")
-  render([App], app)
-  return app
+function showBoard() {
+  const app = document.querySelector(".app");
+  render(parseSjdon([App], createElement), app);
+  return app;
 }
 
-
-  
 // document.querySelector("button.undo").addEventListener("click", () => {
 //   if (stateSeq.length > 0) {
 //     state = stateSeq.pop()
 //     showBoard()
 //   }
 // })
-
