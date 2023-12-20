@@ -13,7 +13,7 @@ let boardState = Array(6)
 
 let stateSeq = [];
 
-let winner = false;
+let winner = false
 
 const SERVICE = "http://localhost:3000/api/data?api-key=c4game";
 
@@ -22,7 +22,7 @@ const SERVICE = "http://localhost:3000/api/data?api-key=c4game";
 function initGame() {
   stateSeq.push(boardState.map((arr) => arr.slice()));
   let board = showBoard();
-  winner = false;
+  winner = false
 }
 
 function shouldButtonBeVisible() {
@@ -45,30 +45,17 @@ function showBoard() {
 
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 7; j++) {
-      let field = document.createElement("div");
-
-      if (boardState[i][j] === "-") {
-        renderSJDON(["div", { class: "field" }], field);
-      }
-
-      if (boardState[i][j] === "r") {
-        renderSJDON(
-          ["div", { class: "field" }, ["div", { class: "red piece" }]],
-          field
-        );
-      }
-
-      if (boardState[i][j] === "b") {
-        renderSJDON(
-          ["div", { class: "field" }, ["div", { class: "blue piece" }]],
-          field
-        );
-      }
+      const field = elt("div", { class: "field" });
       field.addEventListener("click", (event) => setStone(j));
+      if (boardState[i][j] === "r") {
+        field.appendChild(elt("div", { class: "red piece" }));
+      }
+      if (boardState[i][j] === "b") {
+        field.appendChild(elt("div", { class: "blue piece" }));
+      }
       board.appendChild(field);
     }
   }
-
   if (countStones("r") > countStones("b")) {
     currentPlayer = Player.blue;
   } else {
@@ -78,6 +65,7 @@ function showBoard() {
   document.getElementById("currentPlayer").textContent = getCurrentPlayer();
   shouldButtonBeVisible();
 }
+
 
 //  Helper function for DOM manipulation
 //
@@ -118,13 +106,14 @@ function setStone(column) {
   if (connect4Winner(previousPlayer, boardState)) {
     document.getElementById("winner").textContent =
       getPreviousPlayer() + " wins!";
-    winner = true;
+      winner = true
   }
-  if (winner) {
+  if(winner){
     setTimeout(() => {
-      alert("Player " + getPreviousPlayer() + " has won the game!");
+      alert('Player ' + getPreviousPlayer() + ' has won the game!');
     }, 10);
   }
+
 }
 
 function getRowElementsInArray(column) {
