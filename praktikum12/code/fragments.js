@@ -9,12 +9,17 @@ const Player = {
 
 let state = {
   board: [
-    ["", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", ""],
+    ["-", "-", "-", "-", "-", "-", "-"],
+
+    ["-", "-", "-", "-", "-", "-", "-"],
+
+    ["-", "-", "-", "-", "-", "-", "-"],
+
+    ["-", "-", "-", "-", "-", "-", "-"],
+
+    ["-", "-", "-", "-", "-", "-", "-"],
+
+    ["-", "-", "-", "-", "-", "-", "-"],
   ],
   current: Player.red,
   previous: Player.blue,
@@ -23,12 +28,6 @@ let state = {
 };
 
 let stateSeq = [];
-
-function initGame() {
-  stateSeq.push(state.board.map((arr) => arr.slice()));
-  showBoard();
-  state.board.winner = false;
-}
 
 function shouldButtonBeVisible() {
   checkServerAvailability();
@@ -46,7 +45,7 @@ function setStone(column) {
   let rowElements = getRowElementsInArray(column);
   for (let i = 5; i >= 0; i--) {
     if (rowElements[i] === "-") {
-      state.board[i][column] = currentPlayer;
+      state.board[i][column] = state.current;
       break;
     }
   }
@@ -69,9 +68,16 @@ function setStone(column) {
       getPreviousPlayer() + " wins!";
     state.winner = true;
   }
-  if (winner) {
+  if (state.winner) {
     setTimeout(() => {
       alert("Player " + getPreviousPlayer() + " has won the game!");
+      state.board = Array(6)
+        .fill("-")
+        .map((el) => Array(7).fill("-"));
+      state.current = Player.red;
+      document.getElementById("winner").textContent = "you both are loosers";
+      stateSeq = [];
+      initGame();
     }, 10);
   }
 }
@@ -79,7 +85,7 @@ function setStone(column) {
 function getRowElementsInArray(column) {
   let rowElements = [];
   for (let i = 0; i < 6; i++) {
-    rowElements.push(boardState[i][column]);
+    rowElements.push(state.board[i][column]);
   }
   return rowElements;
 }
@@ -100,7 +106,13 @@ function getPreviousPlayer() {
   }
 }
 
-function reset() {
+function initGame() {
+  stateSeq.push(state.board.map((arr) => arr.slice()));
+  showBoard();
+  state.winner = false;
+}
+
+document.getElementById("reset").addEventListener("click", function (event) {
   state.board = Array(6)
     .fill("-")
     .map((el) => Array(7).fill("-"));
@@ -108,16 +120,16 @@ function reset() {
   document.getElementById("winner").textContent = "you both are loosers";
   stateSeq = [];
   initGame();
-}
+});
 
-function undo() {
+document.getElementById("undo").addEventListener("click", function (event) {
   if (stateSeq.length > 1) {
-    state.current = staet.previous;
+    state.current = state.previous;
     stateSeq.pop();
     state.board = stateSeq[stateSeq.length - 1];
   }
   showBoard();
-}
+});
 
 function checkServerAvailability() {
   fetch(SERVICE, {
@@ -136,44 +148,52 @@ function checkServerAvailability() {
 }
 
 // Save current state to LocalStorage
-function saveState() {
-  localStorage.setItem("boardState", JSON.stringify(state.board));
-}
+document
+  .getElementById("saveState")
+  .addEventListener("click", function (event) {
+    localStorage.setItem("boardState", JSON.stringify(state.board));
+  });
 
 // Load state from LocalStorage
-function loadState() {
-  const savedState = localStorage.getItem("boardState");
-  if (savedState) {
-    state.board = JSON.parse(savedState);
-    showBoard();
-  }
-}
-
-function loadStateFromServer() {
-  fetch(SERVICE, {
-    method: "GET",
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      state.board = data.board;
+document
+  .getElementById("loadState")
+  .addEventListener("click", function (event) {
+    const savedState = localStorage.getItem("boardState");
+    if (savedState) {
+      state.board = JSON.parse(savedState);
       showBoard();
-    });
-}
+    }
+  });
+
+document
+  .getElementById("loadStateFromServer")
+  .addEventListener("click", function (event) {
+    fetch(SERVICE, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        state.board = data.board;
+        showBoard();
+      });
+  });
 
 //  Put current state to server
 //
-function saveStateToServer() {
-  fetch(SERVICE, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      // replace with the actual id
-      board: state.board,
-    }),
+document
+  .getElementById("saveStateToServer")
+  .addEventListener("click", function (event) {
+    fetch(SERVICE, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        // replace with the actual id
+        board: state.board,
+      }),
+    });
   });
-}
 
 function countStones(colour) {
   let count = 0;
@@ -244,43 +264,52 @@ function connect4Winner(colour, board) {
 //
 const App = () => [Board, { board: state.board }];
 
+const Field = ({ type, column }) => {
+  const attributes = {
+    class: "field",
+    onclick: () => setStone(column),
+  };
+
+  if (type == "r") {
+    return ["div", attributes, ["div", { class: "red piece" }]];
+  } else if (type == "b") {
+    return ["div", attributes, ["div", { class: "blue piece" }]];
+  } else {
+    return ["div", attributes];
+  }
+};
+
 const Board = ({ board }) => {
   let rows = [];
-  for (const col in board) {
-    rows.push([Row, { coll: board[col] }]);
+  for (let i = 0; i < 7; i++) {
+    let cols = [];
+    for (let j = 0; j < 6; j++) {
+      cols.push([Field, { type: board[j][i], column: i }]);
+    }
+    rows.push(["div", { class: "row" }, ...cols]);
   }
   return ["div", { class: "board" }, ...rows];
 };
 
-const Row = ({ row }) => {
-  let fields = row.map((type) => [Field, { type }]);
-  return ["div", { class: "row" }, ...fields];
-};
-
-const Field = ({type}) => {
-  if(type == 'r'){
-      return (["div", {"class": "field"}, ["div", {"class" : "red piece"}]])
-
-  }else if (type == 'b'){
-      return (["div", {"class": "field"}, ["div", {"class" : "blue piece"}]])
-  }
-  else{
-      return (["div", {"class": "field"}])
-
-  }
-}
 //  Show board:
 //  render [App]
 //
 function showBoard() {
-  const app = document.querySelector(".app");
+  const app = document.getElementById("app");
   render(parseSjdon([App], createElement), app);
+
+  if (countStones("r") > countStones("b")) {
+    state.current = Player.blue;
+  } else {
+    state.current = Player.red;
+  }
+
+  document.getElementById("currentPlayer").textContent = getCurrentPlayer();
+  shouldButtonBeVisible();
+
   return app;
 }
 
-// document.querySelector("button.undo").addEventListener("click", () => {
-//   if (stateSeq.length > 0) {
-//     state = stateSeq.pop()
-//     showBoard()
-//   }
-// })
+stateSeq.push(state.board.map((arr) => arr.slice()));
+showBoard();
+state.board.winner = false;
