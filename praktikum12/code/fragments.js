@@ -5,6 +5,7 @@ const SERVICE = "http://localhost:3000/api/data?api-key=c4game";
 const Player = {
   red: "r",
   blue: "b",
+  green: "g",
 };
 
 let state = {
@@ -25,6 +26,7 @@ let state = {
   previous: Player.blue,
   winner: false,
   isServerConnected: false,
+  winningStones: [],
 };
 
 let stateSeq = [];
@@ -69,8 +71,20 @@ function setStone(column) {
     state.winner = true;
   }
   if (state.winner) {
+
+    //color it green
+    state.winningStones.forEach(([row, col]) => {
+      // Assuming you have a way to select a specific stone on the board,
+      // change its color to green.
+      const stoneElement = document.getElementById(`stone-${row}-${col}`);
+      stoneElement.style.backgroundColor = 'green';
+    });
+
+
     setTimeout(() => {
+      // alert the winner
       alert("Player " + getPreviousPlayer() + " has won the game!");
+      //  Reset game
       state.board = Array(6)
         .fill("-")
         .map((el) => Array(7).fill("-"));
@@ -78,9 +92,12 @@ function setStone(column) {
       document.getElementById("winner").textContent = "you both are loosers";
       stateSeq = [];
       initGame();
-    }, 10);
+    }, 300);
   }
 }
+
+
+
 
 function getRowElementsInArray(column) {
   let rowElements = [];
@@ -218,6 +235,12 @@ function connect4Winner(colour, board) {
         board[i][j + 3] === colour
       ) {
         winner = true;
+        state.winningStones = [
+          [i, j],
+          [i, j + 1],
+          [i, j + 2],
+          [i, j + 3],
+        ];
       }
     }
   }
@@ -230,6 +253,12 @@ function connect4Winner(colour, board) {
         board[i + 3][j] === colour
       ) {
         winner = true;
+        state.winningStones = [
+          [i, j],
+          [i + 1, j],
+          [i + 2, j],
+          [i + 3, j],
+        ];
       }
     }
   }
@@ -242,6 +271,12 @@ function connect4Winner(colour, board) {
         board[i + 3][j + 3] === colour
       ) {
         winner = true;
+        state.winningStones = [
+          [i, j],
+          [i + 1, j + 1],
+          [i + 2, j + 2],
+          [i + 3, j + 3],
+        ];
       }
     }
   }
@@ -254,6 +289,12 @@ function connect4Winner(colour, board) {
         board[i + 3][j - 3] === colour
       ) {
         winner = true;
+        state.winningStones = [
+          [i, j],
+          [i + 1, j - 1],
+          [i + 2, j - 2],
+          [i + 3, j - 3],
+        ];
       }
     }
   }
@@ -264,16 +305,18 @@ function connect4Winner(colour, board) {
 //
 const App = () => [Board, { board: state.board }];
 
-const Field = ({ type, column }) => {
+const Field = ({ type, column, id }) => {
   const attributes = {
     class: "field",
     onclick: () => setStone(column),
   };
 
   if (type == "r") {
-    return ["div", attributes, ["div", { class: "red piece" }]];
+    return ["div", attributes, ["div", { class: "red piece", id: id}]];
   } else if (type == "b") {
-    return ["div", attributes, ["div", { class: "blue piece" }]];
+    return ["div", attributes, ["div", { class: "blue piece", id: id }]];
+  } else if (type == "g") {
+    return ["div", attributes, ["div", { class: "green piece", id: id }]];
   } else {
     return ["div", attributes];
   }
@@ -284,7 +327,7 @@ const Board = ({ board }) => {
   for (let i = 0; i < 7; i++) {
     let cols = [];
     for (let j = 0; j < 6; j++) {
-      cols.push([Field, { type: board[j][i], column: i }]);
+      cols.push([Field, { type: board[j][i], column: i , id: `stone-${j}-${i}`}]);
     }
     rows.push(["div", { class: "row" }, ...cols]);
   }
@@ -304,7 +347,11 @@ function showBoard() {
     state.current = Player.red;
   }
 
-  document.getElementById("currentPlayer").textContent = getCurrentPlayer();
+
+  const currPlay = document.getElementById("currentPlayer");
+  currPlay.style.backgroundColor = 'green';
+  currPlay.textContent = getCurrentPlayer();
+
   shouldButtonBeVisible();
 
   return app;
