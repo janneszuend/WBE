@@ -349,7 +349,12 @@ function showBoard() {
 
 
   const currPlay = document.getElementById("currentPlayer");
-  currPlay.style.backgroundColor = 'green';
+  if(getCurrentPlayer() === 'red'){
+    currPlay.style.backgroundColor = 'red';
+  }
+  else{
+    currPlay.style.backgroundColor = 'blue';
+  }
   currPlay.textContent = getCurrentPlayer();
 
   shouldButtonBeVisible();
