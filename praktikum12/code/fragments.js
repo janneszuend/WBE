@@ -349,11 +349,10 @@ function showBoard() {
 
 
   const currPlay = document.getElementById("currentPlayer");
-  if(getCurrentPlayer() === 'red'){
-    currPlay.style.backgroundColor = 'red';
-  }
-  else{
-    currPlay.style.backgroundColor = 'blue';
+  if(getCurrentPlayer() === "red"){
+    currPlay.style.color = "red";
+  } else {
+    currPlay.style.color = "blue";
   }
   currPlay.textContent = getCurrentPlayer();
 
