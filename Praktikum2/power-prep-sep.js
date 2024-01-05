@@ -8,6 +8,6 @@ const power = function (b, n){
 
 }
 
-let num = power(2,2)
+let num = power(10,4)
 
 console.log(num)
